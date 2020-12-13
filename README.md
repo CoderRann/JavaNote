@@ -2,7 +2,13 @@
 Learning Java includes notes and exercises
 
 * javaSE
-  * [简单学会java第一天之object类和API/learn Java day 5 class and api](./02_javase/02_day01Object类.md)
+  * [简单学会java第一天之object类和API/learn Java day 1 class and api](./02_javase/02_day01Object类.md)
+  
+  * [简单学会java第二天之collection类和泛型/learn Java day 2 class collection and generic](./02_javase/02_day02Collection.md)
+  
+  * [简单学会java弟三天之List和Set/learn Java day 3 List and Set](./02_javase/02_day03List,Set.md)
+  
+  * [简单学会java第四天之Map集合/learn Java day 4 map](./02_javase/02_day04Map.md)
 
   * [简单学会java第五天之异常/learn Java day 5 exceptions](./02_javase/02_day05Exception.md)
   
