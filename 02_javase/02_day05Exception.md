@@ -1,6 +1,6 @@
 ## 异常
-	概念 : 在java等面向对象语言中 异常本身是一个类，产生异常就是		创建异常对象并抛出异常对象,交由jvm中断处理
-	体系 : 根类 : java.lang.Throwable 可抛出
+	概念 : 在java等面向对象语言中 异常本身是一个类，产生异常就是创建异常对象并抛出异常对象,交由jvm中断处理
+	体系 : 根类 : `java.lang.Throwable` 可抛出
 		   子类 : java.lang.Error 错误 不能处理的问题
 				 java.lang.Excption 异常类(编译期异常) 写代码
 				Exception子类  : 
