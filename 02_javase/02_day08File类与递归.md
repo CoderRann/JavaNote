@@ -1,10 +1,10 @@
-##File类 java.io.File
+## File类 java.io.File
 	把文件与目录封装为file类，对文件与目录进行增删改查操作.
 	创建，删除，获取，判断文件
 	对文件夹进行遍历，获取文件的大小
 	file类是一个与系统无关的类。 
 
-##File类静态成员变量
+## File类静态成员变量
 	static String pathSeprator 路径分隔符号 
 		window ;  linux :
 	static char pathSeprator 系统有关路径分隔符·
@@ -15,7 +15,7 @@
 		如 "c:"+File.separator+"hr"
 			c:\\User\hr
 			路径中的文件名称分隔符window使用反斜杠，反斜杠时转义字符，两个反斜杠代表一个普通的反斜杠
-##File类的构造方法
+## File类的构造方法
 	1.File (String pathname);
 		路径可以是文件结尾，也可以是文件夹结尾
 		路径可以相对路径，也可以是绝对路径
@@ -32,7 +32,7 @@
 		父路径是File类型，可以使用File类方法对路径进行操作，再使用路径创建对象 
 		如 : File parent = new File("c:\\");
 			 File file = new File(parent.xxx,"a.txt");
-##File类方法
+## File类方法
 	1.获取功能的方法
 		public String getAbsolutePath();
 		public String getPath(); 将此File转换为路劲文件名
@@ -61,7 +61,7 @@
 		public File[] listFiles(); 返回一个File数组，表示该File目录中的所有的子文件或目录.
 		2.如果构造方法中给出的路径不存在，会抛出空指针异常
 		3.如果路径不是一个目录，也会抛出空指针异常.
-##递归
+## 递归
 	1.概念 :方法自己调用自己的现象
 		分为直接递归和间接递归(a调b，b调a)两种
 	2.注意事项 :
@@ -71,12 +71,12 @@
 	3.使用前提
 		当调用方法的时候，方法的主体不变，每次调用方法的参数不同
 
-*案例
+	*案例
 	递归打印多级目录
 	文件结尾查询
 	public boolean endsWith(String str);
 
-##文件过滤器
+## 文件过滤器
 	File类中有两个重载的方法，方法的参数传递的就是过滤器
 	1.File[] listFiles(FileFilter filter)
 	 	1.作用 :java.io.FileFilter接口 : 用于抽象路径名File对	象过滤器
