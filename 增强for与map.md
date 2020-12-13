@@ -1,0 +1,12 @@
+增强型for循环使用须知：
+
+增强for循环只能用在数组或实现Interable接口的集合类上
+如果遍历一个空的Map对象，for-each循环将抛出NullPointerException异常
+增强for循环和iterator遍历的效果是一样的，也就说增强for循环的内部也就是调用iteratoer实现的。但是增强for循环有些缺点，例如不能在增强循环里动态的删除集合内容。不能获取下标等
+增强型for循环只适合取数据，不会更改数据，如对更改数据有要求需要使用传统for循环方式
+
+
+关于Map集合的遍历
+
+Map集合没有实现Interable接口，因此无法直接使用增强for循环，需要转成相应的set集合，Map集合无法直接迭代 
+Map集合遍历的传统方式：
