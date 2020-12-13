@@ -2,6 +2,8 @@
 Learning Java includes notes and exercises
 
 * javaSE
+  * [简单学会java第一天之object类和API/learn Java day 5 class and api](./02_javase/02_day01Object类.md)
+
   * [简单学会java第五天之异常/learn Java day 5 exceptions](./02_javase/02_day05Exception.md)
   
   * [简单学会java第六天之多线程/learn Java day 6 multithreading](./02_javase/02_day06多线程与同步.md)
