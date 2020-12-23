@@ -75,3 +75,32 @@
 
 **注意:**Metaspace所占用的内存空间不是在虚拟机内部，而是在**本地内存空间中**
 ![](3.png)
+
+**ccs区:** 类的压缩指针
+
+**CodeCache区:** 类class
+
+### 3.3 为什么要废弃jdk1.7的永久区
+
+* 移除永久代是为了融合HotSpot JVM与JRockit vm而做出的努力，因为JRockit没有永久代
+* 现实使用中，由于永久代内存经常不够用或发生内存泄漏，爆出异常java.lang.OutOfMemoryError:PermGen.基于此，将永久区废弃，改用元空间,使用本地内存空间. 
+
+### 3.4 通过jstat命令进行查看堆内存使用情况
+* jstat命令可以查看堆内存各部分的使用量，以及加载类的数据。
+	
+		jstat[-命令选项][vmid进程id][间隔时间/毫秒][查询次数]
+		
+#### 3.4.1 查看class加载统计
+
+	root@[hr]# jstat -class 5212
+
+	说明:
+    * loaded:加载class的数量
+	* Bytes:所占用空间大小
+	* Unloaded:未加载数量
+	* Bytes:为加载占用空间
+	* Times:时间
+
+![](4.png)
+
+#### 3.4.2 查看编译统计
