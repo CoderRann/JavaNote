@@ -103,4 +103,48 @@
 
 ![](4.png)
 
-#### 3.4.2 查看编译统计6+
+#### 3.4.2 查看编译统计
+	root@[hr]# jstat -compiler 5212
+
+	说明:
+    * Compiled:编译数量
+	* Failed:失败数量
+	* Invalid:不可用数量
+	* Times:时间
+	* FailedType:失败类型
+	* FailedMethod:失败的方法
+![](5.png)
+
+
+#### 3.4.2 查看垃圾回收统计
+	root@[hr]# jstat -gc 5212
+
+	说明:
+    * S0C:第一个Survivor区的大小
+	* S1C:第二个Survivor区的大小
+	* S0U:第一个Survivor区的使用大小
+	* S0U:第二个Survivor区的使用大小
+	* EC:Eden区的大小
+	* EU:Eden区的使用大小
+	* OC:Old区大小
+	* OU:Old区的使用大小
+	* MC:方法区大小
+	* MU:方法区使用大小
+	* CCSC:压缩类空间大小
+	* CCSU:压缩类空间使用大小
+	* YGC:年轻代垃圾回收次数
+	* YGCT:年轻代垃圾回收消耗时间
+	* FGC:老年代垃圾回收次数
+	* FGCT:老年代垃圾回收消耗时间
+	* GCT:垃圾回收消耗总时间
+![](6.png)
+
+## 4.jmap的使用以及内存溢出分析
+命令jmap是一个多功能的命令。它可以生成 java 程序的 dump 文件， 也可以查看堆内对象示例的统计信息、查看 ClassLoader 的信息以及 finalizer 队列。
+### 4.1 查看内存使用情况
+**命令：jmap -heap pid**
+
+**heap： 显示Java堆详细信息**
+
+![](7.png)
+![](8.png)
