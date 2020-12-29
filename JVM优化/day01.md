@@ -142,9 +142,65 @@
 ## 4.jmap的使用以及内存溢出分析
 命令jmap是一个多功能的命令。它可以生成 java 程序的 dump 文件， 也可以查看堆内对象示例的统计信息、查看 ClassLoader 的信息以及 finalizer 队列。
 ### 4.1 查看内存使用情况
-**命令：jmap -heap pid**
+**命令：jmap -heap pid** 
 
 **heap： 显示Java堆详细信息**
 
 ![](7.png)
 ![](8.png)
+
+### 4.2 查看内存中对象数量及大小
+
+* 查看所有对象
+
+**命令：jmap -histo pid | more**
+
+* 查看活跃对象
+
+	jmap -histo:live pid | more
+
+![](9.png)
+
+	说明:
+	B  byte
+	c  char
+	D  double
+	F  float
+	I  int
+	J  long
+	Z  boolean
+	[  数组，如[I表示int[]
+	[L+类名 其他对象
+
+### 4.3 将内存使用情况dump到文件中
+有些时候我们需要将jvm当前内存中的情况dump到文件中，然后对它进行分析，jmap也是支持dump到文件中.
+
+	#用法:
+	jmap -dump:format=b,file=dumpFileName <pid>
+
+	b: 二进制
+  
+	#示例:
+	jmap -dump:format=b,file=/tmp/dump.dat 6219
+
+### 4.4 通过jhat对dump文件进行分析
+我们将jvm的内存dump到文件中，这个文件是一个二进制的文件，不方便查看，我们可以借助jhat工具进行查看
+	#用法:
+	jhat -port <port><file>
+	
+	#示例:
+	jhat -port 9999 /tep/dump.dat
+
+	在浏览器输入localhost:9999打开，在底部使用OQL(Object Query Language)查询对象
+
+### 4.5 通过MAT对dump文件进行分析
+MAT(Memory Analyzer Tool)是一个快速且功能丰富的Java heap堆分析器，可帮助您查找内存泄漏并减少内存消耗.
+
+* 下载地址
+https://www.eclipse.org/mat/downloads.php
+
+* 打开文件 
+
+第一个选项帮助我们生成一个包含内存泄漏的报表
+![](10.png) 
+![](11.png)
