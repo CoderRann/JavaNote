@@ -204,3 +204,156 @@ https://www.eclipse.org/mat/downloads.php
 第一个选项帮助我们生成一个包含内存泄漏的报表
 ![](10.png) 
 ![](11.png)
+
+* Histogram
+
+Histogram是我们使用最多的一个，可以列出内存中的对象，对象的个数及其大小
+![](12.png)
+ * 在<Regx>输入进行正则搜索
+
+* Leak Suspects
+
+自动分析内存内存泄漏的原因，可以定位到Class行数。
+![](13.png)
+
+`深色区域`被怀疑有内存泄漏,点开可查看具体类.在Problem Suspect给出可能的问题
+
+
+## 5.实战:内存溢出的定位与分析
+当我们不断将数据写入到一个集合中，出现了死循环，读取超大文件，都可能造成内存溢出
+
+## 5.1 模拟内存溢出
+编写代码，向List集合中添加100万个字符串，每个字符串由1000个UUID组成。如果程序能够正常执行，最后打印ok.
+	
+	import java.util.ArrayList;
+	import java.util.List;
+	import java.util.UUID;
+
+	public class TestJvmOutOfMemoire {
+    public static void main(String[] args) {
+        //test jvm out of memoire
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 1000000; i++)
+        {
+            String str = "";
+            for (int j =0; j< 1000; j++)
+            {
+                str += UUID.randomUUID().toString();
+            }
+            list.add(str);
+        }
+        System.out.println("ok");
+    	}
+	}
+
+	参数:
+	-Xms8m -Xmx8m -XX:+HeapDumpOnOutOfMemoryError
+	注意: 必须添加参数，以生成快照，dump到文件中，方便进行分析
+
+![](14.png)
+图中可以看到生成一个 java_pid4836.hprof文件，将文件导入到MAT进行分析
+![](15.png)
+当我们发现，如果一个线程中，内存占用80%以上，很有可能存在问题。
+
+## 6.jstack的使用
+有些时候我们需要查看下jvm中的**线程**执行情况，比如，发现服务器的cpu的负载突然增高，应用程序出现了死锁，死循环等.因为程序运行正常，没有任何输出，从日志中看不出任何异常。
+
+	#用法:
+	jstatck <pid> #输出进程中的所有线程
+
+### 6.1 线程的状态
+![](16.png)
+
+java中线程的状态一共被分成6种:
+
+* 初始态(new)
+	* 创建一个Thread对象，当还未调用start()启动线程时，线程处于初始态
+* 运行态(Runnable)
+	* 就绪态
+		* 已获得执行所需的所有资源，等cpu分配执行权
+	* 运行态
+		* 由与一个cpu同一时刻只能执行一条线程
+* 阻塞态(BLOCKED)
+	* 当一条正在执行的线程请求某一资源失败时，**而在java中，阻塞态专指请求锁失败时进入的状态**
+	* 处于阻塞态的线态会不断请求资源，一旦请求成功，就会进入就绪队列，变成就绪态。 
+* 等待态(Waiting)
+	* 当前线程调用wait,join,park函数时，放入等待队列中
+	* 需要**等待其他线程唤醒才能继续执行**
+	* 进入等待态的线程会释放CPU执行权，如释放资源(锁...)
+* 超时等待(Timed_waiting) 
+	* 当运行的线程调用sleep(time),wait,join...,就会进入该状态
+	* 它和等待态一样，并不是请求不到资源，而是主动进入等待态，并且进入后需要其他线程唤醒
+	* 进入该状态后释放cpu和占有的资源
+	* 与等待态的区别:到了**超时时间后自动进入阻塞队列**，开始竞争锁.
+* 终止态(TERMINATED) 
+
+### 6.2 实战:死锁问题
+
+#### 6.2.1 构造死锁
+	public class TestDeadLock {
+	    //Lock锁对象
+	    private static Object obj1 = new Object();
+	
+	    private static Object obj2 = new Object();
+	
+	    public static void main(String[] args) {
+	
+	    }
+	
+	    private static class Thread1 implements Runnable{
+	        @Override
+	        public void run() {
+	            synchronized (obj1){
+	                System.out.println("Thread1 拿到了 obj1 的锁");
+	            }
+	            try {
+	                    //让Thread2线程拿到obj2的锁
+	                    Thread.sleep(2000);
+	                } catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	
+	            synchronized (obj2){
+	                System.out.println("Thread1 拿到了 obj2 的锁");
+	            }
+	        }
+	    }
+	
+	
+	    private static class Thread2 implements Runnable{
+	        @Override
+	        public void run() {
+	            synchronized (obj2){
+	                System.out.println("Thread2 拿到了 obj2 的锁");
+	            }
+	            try {
+	                //让Thread1线程拿到obj1的锁
+	                Thread.sleep(2000);
+	            } catch (InterruptedException e) {
+	                e.printStackTrace();
+	            }
+	            synchronized (obj1){
+	                System.out.println("Thread2 拿到了 obj1 的锁");
+	            }
+	        }
+	    }
+	
+	}
+
+#### 6.2.2 使用jstack查看线程
+
+* 查看运行的java进程id
+		
+		[root@hr ~]# jps
+* 使用jstack进行分析
+		
+		[root@hr ~]# jps <pid>
+
+![](17.png)
+		
+
+## 7.VisualVM工具
+VisualVM 是Netbeans的profile子项目,已在JDK6中自带,能够**监控线程,内存情况,查看方法的CPU时间和内存中的对象,已被GC的对象,反向查看分配的堆栈**.
+
+### 7.1 启动
+在jdk的安装目录bin下，找到jvisualvm.exe运行
