@@ -55,3 +55,7 @@
 
 ## 4.Collection集合contains()方法使用
 定义一个方法listTest(ArrayList<String> al, String s),要求使用contains()方法判断al集合里面是否包含s。
+
+	 private static Collection<Integer> listTest(Collection<Integer> list, String s) {
+        System.out.println(list.contains(s));
+    }
